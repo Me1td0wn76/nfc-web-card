@@ -1,16 +1,62 @@
 /*
-  空の雛形です。
-  /web-card スキルが要件を聞いてから、このファイルを丸ごと書き換えます。
+  Web名刺のスタイル。
+  色や角丸を変えたいときは、まずこの :root の変数だけを触ってください。
+
+  デザインの方針:
+  - NFCカードをタップして開かれるページなので、まずアイコンが挨拶をする
+  - 名前が主役。左揃えで、名刺と同じ読み順にする
+  - 色は紫ひとつだけ。強調は色ではなく、文字の大きさと余白でつくる
+  - 見出しは、字間を空けた欧文に小さな和文を添える組み方にする
+  - 動きは「弾む」方向にそろえる（scale と rotate）。速く、短く終わらせる
 */
 
-/* CSS 変数だけ残しておきます。色の希望はここを変えると全体に反映されます */
 :root {
-  --bg: #14110f;
-  --card: #1e1a17;
-  --text: #f3ebe3;
-  --muted: #b3a79c;
-  --line: rgba(243, 235, 227, 0.12);
-  --accent: #e07a5f;
+  color-scheme: light dark;
+
+  --paper: #f6f3fb;
+  --dot: rgba(109, 40, 217, 0.11);
+  --card: #ffffff;
+  --tile: #f4f0fd;
+  --ink: #241c3b;
+  --ink-mid: #4a4266;
+  --ink-soft: #6a6285;
+  --rule: rgba(36, 28, 59, 0.12);
+  --violet: #6d28d9;
+  --on-violet: #ffffff;
+  --wash: rgba(109, 40, 217, 0.1);
+  --shadow: 0 18px 44px rgba(52, 22, 104, 0.1);
+
+  --radius-card: 26px;
+  --radius-tile: 18px;
+  --radius-btn: 16px;
+  --radius-stamp: 26px;
+
+  /* 丸ゴシックがある端末では、やわらかい字面になります */
+  --font:
+    "Hiragino Maru Gothic ProN", "M PLUS Rounded 1c", "Hiragino Sans",
+    "Yu Gothic Medium", "Yu Gothic", Meiryo, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* 弾む動きのカーブ。行き過ぎて少し戻る */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 端末がダークモードのときだけ、色を差し替えます */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14101f;
+    --dot: rgba(183, 156, 255, 0.12);
+    --card: #1f1833;
+    --tile: #2a2144;
+    --ink: #f1ecff;
+    --ink-mid: #cdc4e6;
+    --ink-soft: #a79cc4;
+    --rule: rgba(241, 236, 255, 0.14);
+    --violet: #b79cff;
+    --on-violet: #1a1230;
+    --wash: rgba(183, 156, 255, 0.16);
+    --shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+  }
 }
 
 * {
@@ -21,4 +67,520 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-attachment: fixed;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(109, 40, 217, 0.15);
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+dl,
+dd {
+  margin: 0;
+}
+
+a {
+  color: var(--violet);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  touch-action: manipulation;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+}
+
+.card {
+  width: min(460px, 100%);
+  padding: 30px 26px 34px;
+  border-radius: var(--radius-card);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  animation: card-in 0.5s var(--spring) both;
+}
+
+/* ---------- あいさつ ---------- */
+
+.hello {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.stamp {
+  position: relative;
+  flex: none;
+  width: 88px;
+  height: 88px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-stamp);
+  background: var(--wash);
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: manipulation;
+  animation: stamp-in 0.5s 0.08s var(--spring) both;
+}
+
+.stamp img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 画像がまだ無いときは、代わりの文字を表示します */
+.stamp.is-fallback img {
+  display: none;
+}
+
+.stamp.is-fallback::after {
+  content: attr(data-fallback);
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--violet);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.stamp.is-wiggle {
+  animation: wiggle 0.45s ease;
+}
+
+.hello-talk {
+  flex: 1;
+  min-width: 0;
+  padding-top: 6px;
+}
+
+.hint {
+  margin-bottom: 5px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  animation: bob 1.8s 1.6s ease-in-out infinite;
+}
+
+.bubble {
+  position: relative;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--tile);
+  font-size: 13px;
+  line-height: 1.65;
+  text-wrap: pretty;
+  word-break: auto-phrase;
+  animation: bubble-in 0.4s 0.7s var(--spring) both;
+}
+
+.bubble::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: -6px;
+  width: 12px;
+  height: 14px;
+  background: var(--tile);
+  clip-path: polygon(0 45%, 100% 0, 100% 100%);
+}
+
+/* ---------- 名前まわり ---------- */
+
+.name {
+  margin-top: 28px;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  font-feature-settings: "palt" 1;
+  text-wrap: balance;
+}
+
+/* 1文字ずつ順番に出てきます（script.js が文字を分けます） */
+.name .ch {
+  display: inline-block;
+  animation: char-in 0.4s var(--spring) both;
+}
+
+/* 大きな名前に、小さく字間を空けたローマ字を添えます */
+.romaji {
+  margin-top: 10px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.3em;
+}
+
+.role {
+  margin-top: 24px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.meta {
+  margin-top: 3px;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+}
+
+/* 色ではなく、大きさと余白で目立たせます */
+.lede {
+  margin-top: 24px;
+  color: var(--ink);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 2;
+  letter-spacing: 0.02em;
+  text-indent: -0.5em;
+  font-feature-settings: "palt" 1;
+  text-wrap: balance;
+  word-break: auto-phrase;
+}
+
+.about {
+  margin-top: 24px;
+  color: var(--ink-mid);
+  font-size: 14px;
+  line-height: 2.1;
+  text-wrap: pretty;
+}
+
+/* ---------- ブロックの見出し ---------- */
+
+.block {
+  margin-top: 46px;
+}
+
+.block h2 {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* 字間を空けた分、右にずれるので text-indent で中央に戻します */
+.block h2 .en {
+  display: block;
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+}
+
+.block h2 .ja {
+  display: block;
+  margin-top: 7px;
+  color: var(--ink-soft);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+}
+
+/* ---------- プロフィール ---------- */
+
+.facts {
+  display: grid;
+  grid-template-columns: 7.6em 1fr;
+}
+
+.facts dt,
+.facts dd {
+  padding: 10px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.facts dt {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.facts dd {
+  padding-left: 10px;
+  color: var(--ink-soft);
+}
+
+.facts dt:first-of-type,
+.facts dd:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+/* ---------- つくっているもの ---------- */
+
+.works {
+  padding: 0;
+  list-style: none;
+}
+
+/* 一番見せたいものだけ、面を敷いて浮かせます */
+.work-lead {
+  padding: 20px;
+  border-radius: var(--radius-tile);
+  background: var(--tile);
+}
+
+.work + .work {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+
+.work-lead + .work {
+  padding-top: 0;
+  border-top: none;
+}
+
+.work h3 {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+
+.work h3 a {
+  overflow-wrap: anywhere;
+  text-underline-offset: 4px;
+}
+
+.kind {
+  margin-left: 9px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.work p {
+  margin-top: 8px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 2;
+  text-wrap: pretty;
+}
+
+.work code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--wash);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- リンク ---------- */
+
+.links {
+  display: grid;
+  gap: 10px;
+}
+
+.btn {
+  display: grid;
+  gap: 3px;
+  min-height: 62px;
+  padding: 12px 18px;
+  align-content: center;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.12s var(--spring);
+}
+
+.btn-sub {
+  color: var(--ink-soft);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  overflow-wrap: anywhere;
+}
+
+.btn-main {
+  border-color: var(--violet);
+  color: var(--on-violet);
+  background: var(--violet);
+}
+
+.btn-main .btn-sub {
+  color: var(--on-violet);
+  opacity: 0.8;
+}
+
+.btn:hover {
+  border-color: var(--violet);
+  background: var(--wash);
+  transform: translateY(-2px);
+}
+
+.btn-main:hover {
+  background: var(--violet);
+  filter: brightness(1.08);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* ---------- 動き ---------- */
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+}
+
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-12deg);
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px) scale(0.9);
+  }
+}
+
+@keyframes char-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-6deg);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-7deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(7deg) scale(1.05);
+  }
+}
+
+/*
+  スクロールで現れるブロック。
+  JavaScript が動くときだけ隠すので、止まっていても内容は読めます。
+*/
+.js-motion .reveal {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+}
+
+.js-motion .reveal.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.45s ease, transform 0.55s var(--spring);
+}
+
+/* 動きを減らす設定の端末では、すべて静止させます */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .stamp,
+  .bubble,
+  .hint,
+  .name .ch,
+  .stamp.is-wiggle {
+    animation: none;
+  }
+
+  .btn {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btn:active {
+    transform: none;
+  }
+}
+
+/* ---------- 画面幅の調整 ---------- */
+
+@media (max-width: 360px) {
+  .card {
+    padding: 26px 20px 30px;
+  }
+
+  .stamp {
+    width: 76px;
+    height: 76px;
+  }
+
+  .name {
+    font-size: 38px;
+  }
+
+  .lede {
+    font-size: 18px;
+  }
+
+  .block h2 .en {
+    font-size: 19px;
+  }
+
+  .facts {
+    grid-template-columns: 7.2em 1fr;
+  }
 }
