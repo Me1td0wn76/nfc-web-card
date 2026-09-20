@@ -16,7 +16,7 @@ const bubble = document.querySelector("#greeting");
 const name = document.querySelector(".name");
 
 // アイコン画像がまだ無いときは、代わりの文字に切り替えます。
-// starter/assets/avatar.png を置けば、自動で画像が表示されます。
+// starter/assets/avatar.jpg を置けば、自動で画像が表示されます。
 if (stamp && image) {
   const showFallback = () => stamp.classList.add("is-fallback");
 
