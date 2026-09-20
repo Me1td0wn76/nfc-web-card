@@ -117,6 +117,136 @@ a:hover {
   outline-offset: 3px;
 }
 
+/* ---------- 読み込み画面 ---------- */
+
+/* JavaScript が動くときだけ表示します */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  place-items: center;
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* 読み込み中と、消えていく途中だけ表示します */
+.is-loading .loader,
+.loader.is-done {
+  display: grid;
+}
+
+.loader[hidden] {
+  display: none;
+}
+
+/* 読み込み中は後ろの本文を動かさないようにします */
+html.is-loading,
+html.is-loading body {
+  overflow: hidden;
+}
+
+/* 本文の登場アニメーションは、読み込みが終わるまで止めておきます */
+.is-loading .card,
+.is-loading .stamp,
+.is-loading .bubble,
+.is-loading .hint,
+.is-loading .name .ch {
+  animation-play-state: paused;
+}
+
+.loader-box {
+  width: min(240px, 66vw);
+}
+
+.loader-track {
+  position: relative;
+  padding-top: 38px;
+}
+
+/* ゲージの先頭を、目のついた四角がぴょんぴょん跳ねながら進みます */
+.loader-hop {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  border-radius: 10px;
+  background: var(--violet);
+  animation:
+    hop 0.5s ease-in-out infinite,
+    walk var(--dur, 1200ms) linear forwards;
+}
+
+.loader-hop::before,
+.loader-hop::after {
+  content: "";
+  position: absolute;
+  top: 11px;
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 50%;
+  background: var(--card);
+}
+
+.loader-hop::before {
+  left: 7px;
+}
+
+.loader-hop::after {
+  right: 7px;
+}
+
+/* 読み終わったら、うれしそうに跳ねます */
+.loader-hop.is-done {
+  left: 100%;
+  animation: cheer 0.4s ease;
+}
+
+.loader-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--wash);
+  overflow: hidden;
+}
+
+.loader-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--violet);
+  animation: fill var(--dur, 1200ms) linear forwards;
+}
+
+.loader-text {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.loader-label {
+  color: var(--ink-soft);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+}
+
+.loader-pct {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.loader.is-done {
+  pointer-events: none;
+  animation: loader-out 0.4s ease forwards;
+}
+
 .card {
   width: min(460px, 100%);
   padding: 30px 26px 34px;
@@ -504,6 +634,46 @@ a:hover {
   }
   50% {
     transform: translateY(-3px);
+  }
+}
+
+@keyframes fill {
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes walk {
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px) scaleY(1.06);
+  }
+}
+
+@keyframes cheer {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  45% {
+    transform: translateY(-18px) rotate(-14deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes loader-out {
+  to {
+    opacity: 0;
   }
 }
 
