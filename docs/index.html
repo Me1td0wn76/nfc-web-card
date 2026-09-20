@@ -4,15 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Web名刺</title>
-    <meta name="description" content="（氏名）のWeb名刺です。フルスタックエンジニア、大阪情報専門学校。" />
+    <meta name="description" content="山田 陸杜のWeb名刺です。フルスタックエンジニア、大阪情報専門学校。" />
     <meta name="theme-color" content="#f6f3fb" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#14101f" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="profile" />
-    <meta property="og:title" content="（氏名） | Web名刺" />
+    <meta property="og:title" content="山田 陸杜 | Web名刺" />
     <meta property="og:description" content="フルスタックエンジニア、大阪情報専門学校。" />
     <link rel="stylesheet" href="./style.css" />
+    <!--
+      読み込み画面を出すための合図です。
+      JavaScript が動かない端末と、「動きを減らす」設定の端末では
+      読み込み画面は出ず、いきなり本文が表示されます。
+    -->
+    <script>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("is-loading");
+      }
+    </script>
   </head>
   <body>
+    <div class="loader" id="loader">
+      <div class="loader-box">
+        <div class="loader-track">
+          <div class="loader-hop" aria-hidden="true"></div>
+          <div
+            class="loader-bar"
+            id="gauge"
+            role="progressbar"
+            aria-label="読み込み中"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <span class="loader-fill"></span>
+          </div>
+        </div>
+        <p class="loader-text">
+          <span class="loader-label" translate="no">LOADING…</span>
+          <span class="loader-pct" id="percent" translate="no">0%</span>
+        </p>
+      </div>
+    </div>
+
     <!--
       ★ 自分で書き換えるところ
       1. <title> / description / og:title の「（氏名）」
