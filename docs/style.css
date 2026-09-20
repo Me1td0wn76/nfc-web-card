@@ -1,0 +1,24 @@
+/*
+  空の雛形です。
+  /web-card スキルが要件を聞いてから、このファイルを丸ごと書き換えます。
+*/
+
+/* CSS 変数だけ残しておきます。色の希望はここを変えると全体に反映されます */
+:root {
+  --bg: #14110f;
+  --card: #1e1a17;
+  --text: #f3ebe3;
+  --muted: #b3a79c;
+  --line: rgba(243, 235, 227, 0.12);
+  --accent: #e07a5f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}

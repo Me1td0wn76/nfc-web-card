@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>（氏名） | Web名刺</title>
+    <meta name="description" content="（氏名）のWeb名刺です。フルスタックエンジニア、大阪情報専門学校。" />
+    <meta name="theme-color" content="#f6f3fb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14101f" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="（氏名） | Web名刺" />
+    <meta property="og:description" content="フルスタックエンジニア、大阪情報専門学校。" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!--
+      ★ 自分で書き換えるところ
+      1. <title> / description / og:title の「（氏名）」
+      2. 下の <h1 class="name"> の「（氏名）」と <p class="romaji"> の「（Romaji）」
+      3. アイコン画像を starter/assets/avatar.png として置く
+         （画像を置くまでは data-fallback の文字がアイコンに表示されます）
+      4. あいさつのセリフは script.js の greetings を編集してください
+    -->
+    <main class="card">
+      <header class="intro">
+        <div class="hello">
+          <button class="stamp" type="button" data-fallback="ME" aria-label="あいさつを切り替える">
+            <img src="./assets/avatar.png" alt="" width="88" height="88" fetchpriority="high" />
+          </button>
+          <div class="hello-talk">
+            <p class="hint">アイコンをタップしてみて</p>
+            <p class="bubble" id="greeting" aria-live="polite">タップありがとう！</p>
+          </div>
+        </div>
+
+        <h1 class="name">（氏名）</h1>
+        <p class="romaji" translate="no">（Romaji）</p>
+
+        <p class="role">フルスタックエンジニア</p>
+        <p class="meta">大阪情報専門学校</p>
+
+        <p class="lede">「バックエンドもフロントも、まるごと作ります。」</p>
+
+        <p class="about">大阪情報専門学校に在籍しながら、医療系システムの基盤開発に携わっています。JavaやPython、Goでのバックエンド開発から、TypeScript・Astroを使ったフロントエンドまで幅広く手を動かしています。個人開発とOSSへのコントリビュートが好きで、いまはOSSの開発に力を入れています。</p>
+      </header>
+
+      <section class="block reveal">
+        <h2>
+          <span class="en" translate="no">PROFILE</span>
+          <span class="ja">プロフィール</span>
+        </h2>
+        <dl class="facts">
+          <dt>言語</dt>
+          <dd translate="no">Java、Python、Go、TypeScript、JavaScript</dd>
+
+          <dt>フレームワーク</dt>
+          <dd translate="no">Spring&nbsp;Boot、Flask、Gin、Astro、Vite</dd>
+
+          <dt>データベース</dt>
+          <dd translate="no">PostgreSQL</dd>
+
+          <dt>インフラ</dt>
+          <dd translate="no">IIS、Linux</dd>
+
+          <dt>資格</dt>
+          <dd>基本情報技術者</dd>
+
+          <dt>いま夢中</dt>
+          <dd>OSSの開発</dd>
+        </dl>
+      </section>
+
+      <section class="block reveal">
+        <h2>
+          <span class="en" translate="no">WORKS</span>
+          <span class="ja">つくっているもの</span>
+        </h2>
+        <ul class="works">
+          <li class="work work-lead">
+            <h3>
+              <a href="https://github.com/moeru-ai/airi" target="_blank" rel="noopener noreferrer" translate="no">moeru-ai/airi</a>
+              <span class="kind">OSS</span>
+            </h3>
+            <p>初回起動時のオンボーディングUI（APIキー設定ダイアログ）を実装した <a href="https://github.com/moeru-ai/airi/pull/259" target="_blank" rel="noopener noreferrer" translate="no">PR&nbsp;#259</a> がマージされました。デスクトップ版とWeb版の両対応、英語・簡体字の多言語対応まで担当しています。</p>
+          </li>
+          <li class="work">
+            <h3>
+              <a href="https://github.com/Me1td0wn76/OCR_screen_capture" target="_blank" rel="noopener noreferrer" translate="no">OCR_screen_capture</a>
+              <span class="kind">個人開発・進行中</span>
+            </h3>
+            <p><code translate="no">Win&nbsp;+&nbsp;Shift&nbsp;+&nbsp;S</code> で撮ったスクリーンショットを自動で検知してOCRし、コピー・読み上げ・翻訳までこなす常駐ツールです。PythonとFlask、RapidOCR に Svelte のUIを組み合わせ、インストーラ配布まで対応しています。</p>
+          </li>
+          <li class="work">
+            <h3>
+              医療系システムの基盤
+              <span class="kind">仕事</span>
+            </h3>
+            <p>PythonとTypeScriptを使い、バックエンドとフロントエンドの両方を担当しています。</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block reveal">
+        <h2>
+          <span class="en" translate="no">LINKS</span>
+          <span class="ja">リンク</span>
+        </h2>
+        <nav class="links" aria-label="リンク">
+          <a class="btn btn-main" href="https://github.com/Me1td0wn76" target="_blank" rel="noopener noreferrer">
+            GitHub を見る
+            <span class="btn-sub" translate="no">@Me1td0wn76</span>
+          </a>
+          <a class="btn" href="https://yama-pro.blog/" target="_blank" rel="noopener noreferrer">
+            ブログを読む
+            <span class="btn-sub" translate="no">yama-pro.blog</span>
+          </a>
+        </nav>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
